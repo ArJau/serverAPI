@@ -20,8 +20,9 @@ var init = function(db, collectionName, jsonShema ,  callbackWithPersistentModel
     PersistentModel = mongoose.model(collectionName, genericShema);
     
     //console.log("mongoose PersistentCircuitModel : " + PersistentCircuitModel );
-    if(callbackWithPersistentModel)
+    if(callbackWithPersistentModel){
         callbackWithPersistentModel(PersistentModel);
+    }
 }
 
 module.exports.init=init;

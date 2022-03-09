@@ -6,7 +6,7 @@ var mapF = new Map();//map nom du fichier => nom du model
 var dbName = "TransportHoraire";
 
 
-async function initModels(){
+async function initModels(callBackFuntion){
    var db = await connectionDb.initDb(dbName);
    let circuit = {
         
@@ -169,7 +169,8 @@ async function initModels(){
         stop_lat : {"type": "string"},
         stop_lon : {"type": "string"},
         location_type : {"type": "string"},
-        parent_station : {"type": "string"}
+        parent_station : {"type": "string"},
+        idPosition:{"type": "string"}
     };
     repoInit(db, 'stops', stops);
  
@@ -337,6 +338,9 @@ async function initModels(){
     };
     repoInit(dbName, 'feed_info', feed_info);
 
+    if (callBackFuntion){
+        callBackFuntion(mapM);
+    }
 }
 
 function repoInit(db, nameCollection, schema){
