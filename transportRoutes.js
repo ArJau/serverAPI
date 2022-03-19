@@ -25,7 +25,25 @@ apiRouter.route('/transport-api/public/lstStops')
         res.status(404);
         console.log("err: " + err);
     }
-    
+});
+
+apiRouter.route('/transport-api/public/lstStopsTrajet')
+.get( function(req , res  , next ) {
+    console.log(req.query.idPosition);
+    if (req.query.idPosition){
+        var criteria = {"idPosition.pos": req.query.idPosition};
+       
+        PersistentModel = mapModel.get("trajets");
+        PersistentModel.find(criteria, function(err, lstTrajets){
+            if(err){
+                console.log("err: " + err);
+            }
+            res.send(lstTrajets);
+        });
+    }else{
+        res.status(404);
+        console.log("err: " + err);
+    }
 });
 
 class stopFiltre{
