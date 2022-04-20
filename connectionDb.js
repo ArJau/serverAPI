@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var mongoDbUrl;
-mongoDbUrl = 'mongodb://127.0.0.1:27017'; //TEST
-//mongoDbUrl = 'mongodb+srv://arjau:T0ul0u5e31120321@cluster0.kgmho.mongodb.net/TransportHoraire?retryWrites=true&w=majority';//PRODUCTION
+mongoDbUrl = 'mongodb://127.0.0.1:27017'; //CHANGE_URL
 
 async function initDb(dbName){
     mongoose.connect(mongoDbUrl, { useNewUrlParser: true, useUnifiedTopology: true, dbName : dbName });
