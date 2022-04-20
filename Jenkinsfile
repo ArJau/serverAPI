@@ -15,6 +15,7 @@ pipeline {
 		stage('2-Changer pour la prod') {
             steps {
                 echo '2 - Changer pour la prod'
+				sh 'sudo chmod 700 prod.sh'
                 sh './prod.sh'
             }
         }
