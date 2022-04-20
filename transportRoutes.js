@@ -10,7 +10,6 @@ modelRepo.initModels( function(model){
 
 apiRouter.route('/transport-api/public/lstStops')
 .get( function(req , res  , next ) {
-    console.log(req.query.idPosition);
     if (req.query.idPosition){
         var criteria = {"idPosition": req.query.idPosition};
        
@@ -29,7 +28,6 @@ apiRouter.route('/transport-api/public/lstStops')
 
 apiRouter.route('/transport-api/public/lstStopsTrajet')
 .get( function(req , res  , next ) {
-    console.log(req.query.idPosition);
     if (req.query.idPosition){
         var criteria = {"idPosition.pos": req.query.idPosition};
        
@@ -44,6 +42,43 @@ apiRouter.route('/transport-api/public/lstStopsTrajet')
         res.status(404);
         console.log("err: " + err);
     }
+});
+
+class Vehicle{
+    routeId;
+    coord = [];
+}
+apiRouter.route('/transport-api/public/realtimesvehicles/:idReseau')
+.get( function(req , res  , next ) {
+    var criteria = {"idReseau": req.params.idReseau};
+    lstVehiclesOpti = {};
+    PersistentModel = mapModel.get("realtimesvehicles");
+    PersistentModel.find(criteria, function(err, lstVehicles){
+        if(err){
+            console.log("err: " + err);
+        }
+
+        for (let vehicle in lstVehicles){
+            let v = new Vehicle();
+            v = vehicle.vehicle.routeId;
+            v.coord.push(vehicle.vehicle.position.latitude);
+            v.coord.push(vehicle.vehicle.position.longitude);
+            lstVehiclesOpti.push(v);
+        }
+        res.send(lstVehiclesOpti);
+    });
+});
+
+apiRouter.route('/transport-api/public/shapes/:idReseau')
+.get( function(req , res  , next ) {
+    var criteria = {"id": req.params.idReseau};
+    PersistentModel = mapModel.get("shapes");
+    PersistentModel.find(criteria, function(err, lstShapes){
+        if(err){
+            console.log("err: " + err);
+        }
+        res.send(lstShapes);
+    });
 });
 
 class stopFiltre{
