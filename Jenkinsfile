@@ -10,11 +10,13 @@ pipeline {
             steps {
                 echo '1 - Checkout project'
                 git branch: 'master', url:'https://github.com/ArJau/serverAPI.git'
+				//git branch: 'master', url:'git@github.com:ArJau/serverAPI.git'
             }
         }
 		stage('2-Changer pour la prod') {
             steps {
                 echo '2 - Changer pour la prod'
+				sh 'whoami'
 				sh 'sudo chmod 700 prod.sh'
                 sh './prod.sh'
             }
