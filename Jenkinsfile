@@ -10,19 +10,15 @@ pipeline {
             steps {
                 echo '1 - Checkout project'
                 git branch: 'master', url:'https://github.com/ArJau/serverAPI.git'
-				//git branch: 'master', url:'git@github.com:ArJau/serverAPI.git'
             }
         }
-		stage('2-Changer pour la prod') {
+		stage('2-Changer URL de prod') {
             steps {
-                echo '2 - Changer pour la prod'
-				sh 'whoami'
-				sh 'sudo chmod 700 prod.sh'
-                sh './prod.sh'
+                sh 'sed -i -E -r "s|.*CHANGE_URL.*|mongoDbUrl=$URL_MONGO_PROD;|g" connectionDb.js'
             }
         }
         
-        stage('5-Nettoyage des containers') {//suppression des anciens containers de la machine docker de test(192.168.33.11) et de la machine jenkins
+        stage('3-Nettoyage des containers') {//suppression des anciens containers de la machine docker de test(192.168.33.11) et de la machine jenkins
             steps {
                 echo 'Clean docker image and container'
                 sh 'ssh -v -o StrictHostKeyChecking=no vagrant@192.168.33.11 sudo docker stop api-transport || true'
@@ -32,7 +28,7 @@ pipeline {
             }
             
         } 
-        stage('6-Docker build') {
+        stage('4-Docker build') {
             steps {
                 echo 'Docker Build'
                 sh 'docker build -t api-transport . ' //lance le container sur le docker de test
@@ -40,7 +36,7 @@ pipeline {
             
         }
         
-        stage('7-Tag image') {
+        stage('5-Tag image') {
             steps {
                 echo '9 - Tag image'
                 sh 'docker tag api-transport jaujau31/api-transport'     
@@ -54,13 +50,13 @@ pipeline {
             }
             
         }
-        stage('9-Push image dockerhub') {
+        stage('6-Push image dockerhub') {
             steps {
                 echo '11 - Push image dockerhub'
                 sh 'docker push jaujau31/api-transport'   
             }
         }
-        stage('10-Run Container to local') {
+        stage('7-Run Container to local') {
             steps {
                 echo 'Docker run'
                 sh 'ssh -v -o StrictHostKeyChecking=no vagrant@192.168.33.11 sudo docker run -d --name api-transport -p8080:8080 jaujau31/api-transport'   
@@ -68,7 +64,7 @@ pipeline {
             
         }
         
-        stage ('11-Deploy To Prod AWS'){
+        stage ('8-Deploy To Prod AWS'){
               input{
                 message "Do you want to proceed for production deployment?"
               }
@@ -78,8 +74,6 @@ pipeline {
                 sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@35.180.43.114 sudo docker rm api-transport || true'
                 sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@35.180.43.114 sudo docker rmi jaujau31/api-transport || true'
                 sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@35.180.43.114 sudo docker run -d --name api-transport -p8080:8080 jaujau31/api-transport'   
-            
-
             }
         }
 
