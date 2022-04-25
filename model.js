@@ -346,10 +346,58 @@ async function initModels(callBackFuntion){
         route_long_name : {"type": "string"},
         route_short_name : {"type": "string"},
         idPosition : [],
-        stops : []
+        stops : [],
+        shapes : []
     };
 
     repoInit(db, 'trajets', trajets);
+
+    let descReseau = {
+        title: {"type": "string"},
+        id: {"type": "string"},
+        url: {"type": "string"},
+        rt: {"type": "string"},
+        nbRoutes: {"type": "string"},
+        center: []
+    };
+    repoInit(db, 'reseau-descs', descReseau);
+
+    let realTimesVehicles = {
+        idReseau: {"type": "string"},
+        trip: {"type": "Object",
+            structure: {
+                tripId: {
+                    key: true,"type": "string"},
+                startDate: {type: "string"},
+                scheduleRelationship: {"type": "string"},
+                routeId: {"type": "string"}
+            }
+        },
+        position: {"type": "Object",
+            structure: {
+                latitude: {"type": "number"},
+                longitude: {
+                    "type": "number"
+                },
+                bearing: {
+                    "type": "number"
+                }
+            }
+        },
+        currentStopSequence: {"type": "number"},
+        currentStatus: {"type": "string"},
+        timestamp: {"type": "string"},
+        vehicle: {
+            "type": "Object",
+            "structure": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        stopId: {"type": "string"}
+    };
+    repoInit(db, 'realtimesvehicles', realTimesVehicles);
 
     if (callBackFuntion){
         callBackFuntion(mapM);

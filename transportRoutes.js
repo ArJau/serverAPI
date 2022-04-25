@@ -47,37 +47,47 @@ apiRouter.route('/transport-api/public/lstStopsTrajet')
 class Vehicle{
     routeId;
     coord = [];
+    bearing;
+    tripId;
 }
+
+apiRouter.route('/transport-api/public/lstDescriptionReseau')
+.get( function(req , res  , next ) {
+    PersistentModel = mapModel.get("reseau-descs");
+    var criteria = {};
+    PersistentModel.find(criteria, function(err, descriptionReseau){
+        if(err){
+            console.log("err: " + err);
+        }
+        res.send(descriptionReseau);
+    });
+});
+
 apiRouter.route('/transport-api/public/realtimesvehicles/:idReseau')
 .get( function(req , res  , next ) {
     var criteria = {"idReseau": req.params.idReseau};
-    lstVehiclesOpti = {};
+    console.log(criteria);
+    lstVehiclesOpti = [];
     PersistentModel = mapModel.get("realtimesvehicles");
     PersistentModel.find(criteria, function(err, lstVehicles){
         if(err){
             console.log("err: " + err);
         }
-
-        for (let vehicle in lstVehicles){
-            let v = new Vehicle();
-            v = vehicle.vehicle.routeId;
-            v.coord.push(vehicle.vehicle.position.latitude);
-            v.coord.push(vehicle.vehicle.position.longitude);
-            lstVehiclesOpti.push(v);
+        console.log(JSON.stringify(lstVehicles));
+        for (let v in lstVehicles){
+            let vehicle = new Vehicle();
+            if (lstVehicles[v].vehicle){
+                vehicle.coord.push(lstVehicles[v].vehicle.position.latitude);
+                vehicle.coord.push(lstVehicles[v].vehicle.position.longitude);
+                vehicle.bearing = lstVehicles[v].vehicle.position.bearing;
+                vehicle.tripId = lstVehicles[v].vehicle.trip.tripId;
+                vehicle.routeId = lstVehicles[v].vehicle.trip.routeId;
+                lstVehiclesOpti.push(vehicle);
+            }
         }
+        console.log("nb lstVehicles : " + lstVehicles.length);
+        console.log("nb lstVehiclesOpti : " + lstVehiclesOpti.length);
         res.send(lstVehiclesOpti);
-    });
-});
-
-apiRouter.route('/transport-api/public/shapes/:idReseau')
-.get( function(req , res  , next ) {
-    var criteria = {"id": req.params.idReseau};
-    PersistentModel = mapModel.get("shapes");
-    PersistentModel.find(criteria, function(err, lstShapes){
-        if(err){
-            console.log("err: " + err);
-        }
-        res.send(lstShapes);
     });
 });
 
