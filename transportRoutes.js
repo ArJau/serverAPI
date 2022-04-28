@@ -8,23 +8,6 @@ modelRepo.initModels( function(model){
     mapModel  = model;
 });
 
-apiRouter.route('/transport-api/public/lstStops')
-.get( function(req , res  , next ) {
-    if (req.query.idPosition){
-        var criteria = {"idPosition": req.query.idPosition};
-       
-        PersistentModel = mapModel.get("stops");
-        PersistentModel.find(criteria, function(err, lstStops){
-            if(err){
-                console.log("err: " + err);
-            }
-            res.send(filtreStops(lstStops));
-        });
-    }else{
-        res.status(404);
-        console.log("err: " + err);
-    }
-});
 
 apiRouter.route('/transport-api/public/lstStopsTrajet')
 .get( function(req , res  , next ) {
@@ -44,11 +27,38 @@ apiRouter.route('/transport-api/public/lstStopsTrajet')
     }
 });
 
+apiRouter.route('/transport-api/public/lstStopsTrajetIdPositionIdReseau')
+.get( function(req , res  , next ) {
+    if (req.query.idPosition){
+        var criteria = {"idPosition.pos": req.query.idPosition, 
+        "id": req.query.idReseau};
+       
+        PersistentModel = mapModel.get("trajets");
+        PersistentModel.find(criteria, function(err, lstTrajets){
+            if(err){
+                console.log("err: " + err);
+            }
+            res.send(lstTrajets);
+        });
+    }else{
+        res.status(404);
+        console.log("err: " + err);
+    }
+});
+
 class Vehicle{
     routeId;
     coord = [];
     bearing;
     tripId;
+    id;
+}
+
+class Alert{
+    text;
+    routeId;
+    start;
+    end;
 }
 
 apiRouter.route('/transport-api/public/lstDescriptionReseau')
@@ -73,21 +83,41 @@ apiRouter.route('/transport-api/public/realtimesvehicles/:idReseau')
         if(err){
             console.log("err: " + err);
         }
-        console.log(JSON.stringify(lstVehicles));
+        //console.log(JSON.stringify(lstVehicles));
         for (let v in lstVehicles){
             let vehicle = new Vehicle();
-            if (lstVehicles[v].vehicle){
-                vehicle.coord.push(lstVehicles[v].vehicle.position.latitude);
-                vehicle.coord.push(lstVehicles[v].vehicle.position.longitude);
-                vehicle.bearing = lstVehicles[v].vehicle.position.bearing;
+            vehicle.coord.push(lstVehicles[v].vehicle.position.latitude);
+            vehicle.coord.push(lstVehicles[v].vehicle.position.longitude);
+            vehicle.bearing = lstVehicles[v].vehicle.position.bearing;
+            vehicle.id = lstVehicles[v].vehicle.vehicle.id;
+            if (lstVehicles[v].vehicle.trip){
                 vehicle.tripId = lstVehicles[v].vehicle.trip.tripId;
                 vehicle.routeId = lstVehicles[v].vehicle.trip.routeId;
-                lstVehiclesOpti.push(vehicle);
             }
+            lstVehiclesOpti.push(vehicle);
         }
-        console.log("nb lstVehicles : " + lstVehicles.length);
-        console.log("nb lstVehiclesOpti : " + lstVehiclesOpti.length);
         res.send(lstVehiclesOpti);
+    });
+});
+
+apiRouter.route('/transport-api/public/realtimesalerts/:idReseau')
+.get( function(req , res  , next ) {
+    var criteria = {"idReseau": req.params.idReseau};
+    console.log(criteria);
+    lstAlertsOpti = [];
+    PersistentModel = mapModel.get("realTimesAlerts");
+    PersistentModel.find(criteria, function(err, lstAlerts){
+        if(err){
+            console.log("err: " + err);
+        }
+        //console.log(JSON.stringify(lstAlerts));
+        /*for (let a in lstAlert){
+            let alert = new Alert();
+            alert.text = lstAlert[a].alert.descriptionText.translation[0].text;
+            alert.routeId = lstAlert[a].alert.informedEntity
+            lstAlertsOpti.push(alert);
+        }*/
+        res.send(lstAlerts);
     });
 });
 

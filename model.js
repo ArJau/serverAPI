@@ -399,6 +399,54 @@ async function initModels(callBackFuntion){
     };
     repoInit(db, 'realtimesvehicles', realTimesVehicles);
 
+    realTimesAlerts = {
+        "idReseau" : {"type": "string"},
+        "alert": {
+            "type": "Object",
+            "structure": {
+                "activePeriod": {
+                    "type": "Array"
+                },
+                "informedEntity": {
+                    "type": "Array"
+                },
+                "cause": {
+                    "key": true,
+                    "type": "string"
+                },
+                "effect": {
+                    "key": true,
+                    "type": "string"
+                },
+                "url": {
+                    "type": "Object",
+                    "structure": {
+                        "translation": {
+                            "type": "Array"
+                        }
+                    }
+                },
+                "headerText": {
+                    "type": "Object",
+                    "structure": {
+                        "translation": {
+                            "type": "Array"
+                        }
+                    }
+                },
+                "descriptionText": {
+                    "type": "Object",
+                    "structure": {
+                        "translation": {
+                            "type": "Array"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    repoInit(db, 'realTimesAlerts', realTimesAlerts);
+
     if (callBackFuntion){
         callBackFuntion(mapM);
     }
