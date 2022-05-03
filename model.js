@@ -358,7 +358,9 @@ async function initModels(callBackFuntion){
         url: {"type": "string"},
         rt: {"type": "string"},
         nbRoutes: {"type": "string"},
-        center: []
+        center: [], 
+        display: {"type": "boolean"},
+        zoom: {"type": "number"},
     };
     repoInit(db, 'reseau-descs', descReseau);
 
@@ -484,27 +486,6 @@ function mapModel(){
     return mapM;
 }
 
-/**
- * Suppression de tous les enregistrements de  toutes les collections
- */
-async function reInitCollections(){
-    let mapM = mapModel();
-    for (const collectionName of mapF.values()){
-        await deleteModel(mapM.get(collectionName), collectionName);
-    }
-}
-
-function deleteModel(model, collectionName){
-    return new Promise((resolve, reject)=>{
-        model.deleteMany({"id": "55ffbe0888ee387348ccb97d"}, function(err, delOK) {
-            if (err) 
-                reject();
-            if (delOK) 
-                resolve(console.log("Collection "+ collectionName + " deleted"));
-        });
-    })
-}
-
 function mapFichier(){
     return mapF;
 }
@@ -514,5 +495,4 @@ initMapF();
 
 module.exports.mapModel=mapModel;
 module.exports.mapFichier=mapFichier;
-module.exports.reInitCollections=reInitCollections;
 module.exports.initModels=initModels;

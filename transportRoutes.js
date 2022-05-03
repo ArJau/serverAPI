@@ -38,6 +38,7 @@ apiRouter.route('/transport-api/public/lstStopsTrajetIdPositionIdReseau')
             if(err){
                 console.log("err: " + err);
             }
+            //console.log(lstTrajets);
             res.send(lstTrajets);
         });
     }else{
