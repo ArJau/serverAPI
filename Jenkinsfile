@@ -14,7 +14,7 @@ pipeline {
         }
 		stage('2-Changer URL de prod') {
             steps {
-                sh 'sed -i -E -r "s|.*CHANGE_URL.*|mongoDbUrl=$URL_MONGO_PROD;|g" connectionDb.js'
+                sh 'sed -i -E -r "s|.*CHANGE_URL.*|mongoDbUrl='$URL_MONGO_PROD';|g" connectionDb.js'
             }
         }
         
