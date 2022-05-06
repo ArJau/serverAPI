@@ -361,6 +361,7 @@ async function initModels(callBackFuntion){
         center: [], 
         display: {"type": "boolean"},
         zoom: {"type": "number"},
+        agence: []
     };
     repoInit(db, 'reseau-descs', descReseau);
 
