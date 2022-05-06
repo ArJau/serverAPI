@@ -8,6 +8,10 @@ modelRepo.initModels( function(model){
     mapModel  = model;
 });
 
+apiRouter.route('/test')
+.get( function(req , res  , next ) { 
+    res.send("Ca marche");
+});
 
 apiRouter.route('/transport-api/public/lstStopsTrajet')
 .get( function(req , res  , next ) {
