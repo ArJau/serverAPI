@@ -70,10 +70,10 @@ pipeline {
               }
             steps {
                 sh 'echo "Deploy into Prod"'
-                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@35.180.43.114 sudo docker stop api-transport || true'
-                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@35.180.43.114 sudo docker rm api-transport || true'
-                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@35.180.43.114 sudo docker rmi jaujau31/api-transport || true'
-                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@35.180.43.114 sudo docker run -d --name api-transport -p8080:8080 jaujau31/api-transport'   
+                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker stop api-transport || true'
+                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker rm api-transport || true'
+                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker rmi jaujau31/api-transport || true'
+                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker run -d --name api-transport -p8282:8282 jaujau31/api-transport'   
             }
         }
 
