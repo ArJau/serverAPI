@@ -14,7 +14,7 @@ pipeline {
         }
 		stage('2-Changer URL de prod') {
             steps {
-                sh 'sed -i -E -r "s|.*CHANGE_URL.*|mongoDbUrl='$URL_MONGO_PROD';|g" connectionDb.js'
+                sh "sed -i -E -r \"s|.*CHANGE_URL.*|mongoDbUrl='$URL_MONGO_PROD';|g\" connectionDb.js"
             }
         }
         
@@ -59,22 +59,23 @@ pipeline {
         stage('7-Run Container to local') {
             steps {
                 echo 'Docker run'
-                sh 'ssh -v -o StrictHostKeyChecking=no vagrant@192.168.33.11 sudo docker run -d --name api-transport -p8080:8080 jaujau31/api-transport'   
+                sh 'ssh -v -o StrictHostKeyChecking=no vagrant@192.168.33.11 sudo docker run -d --rm --name api-transport -p8282:8282 jaujau31/api-transport'   
             }
             
         }
         
         stage ('8-Deploy To Prod AWS'){
-              input{
-                message "Do you want to proceed for production deployment?"
-              }
+              //input{
+            //    message "Do you want to proceed for production deployment?"
+              //}
             steps {
-                sh 'echo "Deploy into Prod"'
-                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker stop api-transport || true'
-                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker rm api-transport || true'
-                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker rmi jaujau31/api-transport || true'
-                sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker run -d --name api-transport -p8282:8282 jaujau31/api-transport'   
-            }
+                    sh 'echo "Deploy into Prod"'
+                    sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker stop api-transport || true'
+                    sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker rm api-transport || true'
+                    sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker rmi jaujau31/api-transport || true'
+                    sh 'ssh -v -o StrictHostKeyChecking=no ubuntu@15.237.111.102 sudo docker run -d --rm --name api-transport -p8282:8282 jaujau31/api-transport'
+                }
+            
         }
 
     }
