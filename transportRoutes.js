@@ -21,13 +21,13 @@ apiRouter.route('/transport-api/public/lstStopsTrajet')
         PersistentModel = mapModel.get("trajets");
         PersistentModel.find(criteria, function(err, lstTrajets){
             if(err){
-                console.log("err: " + err);
+                log("err: " + err);
             }
             res.send(lstTrajets);
         });
     }else{
         res.status(404);
-        console.log("err: " + err);
+        log("err: " + err);
     }
 });
 
@@ -40,14 +40,14 @@ apiRouter.route('/transport-api/public/lstStopsTrajetIdPositionIdReseau')
         PersistentModel = mapModel.get("trajets");
         PersistentModel.find(criteria, function(err, lstTrajets){
             if(err){
-                console.log("err: " + err);
+                log("err: " + err);
             }
-            //console.log(lstTrajets);
+            //log(lstTrajets);
             res.send(lstTrajets);
         });
     }else{
         res.status(404);
-        console.log("err: " + err);
+        log("err: " + err);
     }
 });
 
@@ -72,7 +72,7 @@ apiRouter.route('/transport-api/public/lstDescriptionReseau')
     var criteria = {};
     PersistentModel.find(criteria, function(err, descriptionReseau){
         if(err){
-            console.log("err: " + err);
+            log("err: " + err);
         }
         res.send(descriptionReseau);
     });
@@ -81,14 +81,14 @@ apiRouter.route('/transport-api/public/lstDescriptionReseau')
 apiRouter.route('/transport-api/public/realtimesvehicles/:idReseau')
 .get( function(req , res  , next ) {
     var criteria = {"idReseau": req.params.idReseau};
-    console.log(criteria);
+    log(criteria);
     lstVehiclesOpti = [];
     PersistentModel = mapModel.get("realtimesvehicles");
     PersistentModel.find(criteria, function(err, lstVehicles){
         if(err){
-            console.log("err: " + err);
+            log("err: " + err);
         }
-        //console.log(JSON.stringify(lstVehicles));
+        //log(JSON.stringify(lstVehicles));
         for (let v in lstVehicles){
             let vehicle = new Vehicle();
             vehicle.coord.push(lstVehicles[v].vehicle.position.latitude);
@@ -108,14 +108,14 @@ apiRouter.route('/transport-api/public/realtimesvehicles/:idReseau')
 apiRouter.route('/transport-api/public/realtimesalerts/:idReseau')
 .get( function(req , res  , next ) {
     var criteria = {"idReseau": req.params.idReseau};
-    console.log(criteria);
+    log(criteria);
     lstAlertsOpti = [];
     PersistentModel = mapModel.get("realTimesAlerts");
     PersistentModel.find(criteria, function(err, lstAlerts){
         if(err){
-            console.log("err: " + err);
+            log("err: " + err);
         }
-        //console.log(JSON.stringify(lstAlerts));
+        //log(JSON.stringify(lstAlerts));
         /*for (let a in lstAlert){
             let alert = new Alert();
             alert.text = lstAlert[a].alert.descriptionText.translation[0].text;
@@ -148,6 +148,27 @@ function filtreStops(lstStops){
         
     }
     return Array.from(map.values());
+}
+
+function log(txt, isFichier) {
+    const date = new Date();
+    const content = date.toISOString() + ", " + txt;
+
+    if (isFichier) {
+        var nomFichier = date.getUTCFullYear() + (pad(date.getUTCMonth() + 1)) + date.getUTCDate() + ".log";
+
+        fs.appendFile('log/' + nomFichier, content + "\n", function (err) {
+            if (err) { throw err };
+        });
+    }
+    console.log(content);
+}
+
+function pad(number) {
+    if (number < 10) {
+        return '0' + number;
+    }
+    return Number(number);
 }
 
 exports.apiRouter = apiRouter;
