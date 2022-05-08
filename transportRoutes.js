@@ -105,9 +105,10 @@ apiRouter.route('/transport-api/public/realtimesvehicles/:idReseau')
     });
 });
 
-apiRouter.route('/transport-api/public/realtimesalerts/:idReseau')
+apiRouter.route('/transport-api/public/realtimesalerts')
 .get( function(req , res  , next ) {
-    var criteria = {"idReseau": req.params.idReseau};
+    let lstReseau = req.query.idsReseau.split(",");
+    let criteria = { "idReseau": {$in: lstReseau } }
     console.log(criteria);
     lstAlertsOpti = [];
     PersistentModel = mapModel.get("realTimesAlerts");
@@ -115,13 +116,6 @@ apiRouter.route('/transport-api/public/realtimesalerts/:idReseau')
         if(err){
             console.log("err: " + err);
         }
-        //console.log(JSON.stringify(lstAlerts));
-        /*for (let a in lstAlert){
-            let alert = new Alert();
-            alert.text = lstAlert[a].alert.descriptionText.translation[0].text;
-            alert.routeId = lstAlert[a].alert.informedEntity
-            lstAlertsOpti.push(alert);
-        }*/
         res.send(lstAlerts);
     });
 });
