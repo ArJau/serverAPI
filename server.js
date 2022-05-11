@@ -9,6 +9,15 @@ var jsonParser = bodyParser.json() ;
 //var jsonParser = express.json({extended:true}) ;
 app.use(jsonParser);
 
+// CORS enabled with express/node-js :
+app.use((req,res, next) =>
+{
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type,Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PATCH, PUT, POST, DELETE,OPTIONS');
+    next();
+});
+
 //les routes en /html/... seront gérées par Express par
 //de simples renvois des fichiers statiques
 //du répertoire "./html"

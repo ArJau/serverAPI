@@ -8,14 +8,7 @@ modelRepo.initModels( function(model){
     mapModel  = model;
 });
 
-// CORS enabled with express/node-js :
-express().use((req,res, next) =>
-{
-    res.setHeader('Access-Control-Allow-Origin','*');
-    res.setHeader('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type,Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,PATCH, PUT, POST, DELETE,OPTIONS');
-    next();
-});
+
 
 apiRouter.route('/test')
 .get( function(req , res  , next ) { 
