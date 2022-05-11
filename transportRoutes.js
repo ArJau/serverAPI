@@ -8,6 +8,18 @@ modelRepo.initModels( function(model){
     mapModel  = model;
 });
 
+// CORS enabled with express/node-js :
+express().use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+    app.options('*', (req, res) => {
+        // allowed XHR methods
+        res.header('Access-Control-Allow-Methods', 'GET, PATCH, PUT, POST, DELETE, OPTIONS');
+        res.send();
+    });
+  });
+
 apiRouter.route('/test')
 .get( function(req , res  , next ) { 
     res.send("Ca marche");
@@ -57,13 +69,6 @@ class Vehicle{
     bearing;
     tripId;
     id;
-}
-
-class Alert{
-    text;
-    routeId;
-    start;
-    end;
 }
 
 apiRouter.route('/transport-api/public/lstDescriptionReseau')
