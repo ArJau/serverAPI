@@ -12,7 +12,7 @@ app.use(jsonParser);
 // CORS enabled with express/node-js :
 app.use((req,res, next) =>
 {
-    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Origin','http://bus-transport-front.s3-website.eu-west-3.amazonaws.com');
     res.setHeader('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type,Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET,PATCH, PUT, POST, DELETE,OPTIONS');
     next();
