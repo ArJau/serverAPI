@@ -9,16 +9,13 @@ modelRepo.initModels( function(model){
 });
 
 // CORS enabled with express/node-js :
-express().use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+express().use((req,res, next) =>
+{
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type,Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,PATCH, PUT, POST, DELETE,OPTIONS');
     next();
-    app.options('*', (req, res) => {
-        // allowed XHR methods
-        res.header('Access-Control-Allow-Methods', 'GET, PATCH, PUT, POST, DELETE, OPTIONS');
-        res.send();
-    });
-  });
+});
 
 apiRouter.route('/test')
 .get( function(req , res  , next ) { 
